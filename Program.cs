@@ -1,9 +1,9 @@
-﻿using AdventOfCode2024.Days.DayOne;
+﻿using AdventOfCode2024.Days.DayTwo;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine(new InputParser().GetSimilarityScore());
+        Console.WriteLine(new InputParser().ValidReportCount);
     }
 }
