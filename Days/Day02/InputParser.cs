@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2024.Days.DayTwo;
+﻿namespace AdventOfCode2024.Days.Day02;
 
 public class InputParser
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace AdventOfCode2024.Days.DayThree;
+namespace AdventOfCode2024.Days.Day03;
 
 public class InputParser
 {

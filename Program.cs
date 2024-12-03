@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.DayThree;
+﻿using AdventOfCode2024.Days.Day03;
 using System.Diagnostics;
 
 internal class Program

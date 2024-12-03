@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2024.Days.DayThree;
+﻿namespace AdventOfCode2024.Days.Day03;
 
 /// <summary>
 /// Simple helper class to track a command and it's position in the command string.
