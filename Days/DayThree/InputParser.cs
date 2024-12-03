@@ -7,23 +7,38 @@ public class InputParser
     /// <summary>
     /// Matches the pattern "mul(###,###)"
     /// </summary>
-    private Regex multiplyPattern = new Regex(@"mul\([0-9]{1,3},[0-9]{1,3}\)");
-    private List<string> Commands;
+    private static Regex multiplyPattern = new Regex(@"mul\([0-9]{1,3},[0-9]{1,3}\)");
+
+    /// <summary>
+    /// Matches the patterns "do()" and "don't()"
+    /// </summary>
+    private static Regex enablePattern = new Regex(@"do(n't)?\(\)");
+
+    private List<Command> Commands;
 
     public InputParser()
     {
         StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\DayThree\\input.txt");
-        this.Commands = new List<string>();
+        this.Commands = new List<Command>();
 
         // Parse the results using regex.
         string? line = inputFile.ReadLine();
+        int lineNumber = 0;
         while (line != null)
         {
-            this.Commands.AddRange(this.multiplyPattern.Matches(line)
-                .Select(result => result.Value)
-                .ToList());
+            // Add both the mult and enable/disable commands.
+            this.Commands.AddRange(this.ParseMultCommands(line, lineNumber));
+            this.Commands.AddRange(this.ParseEnableCommands(line, lineNumber));
+
+            // Increment the loop.
             line = inputFile.ReadLine();
+            lineNumber++;
         }
+
+        // Sort the results by line number and index.
+        this.Commands = this.Commands.OrderBy(command => command.LineNumber)
+            .ThenBy(command => command.Index)
+            .ToList();
 
         return;
     }
@@ -34,17 +49,51 @@ public class InputParser
     /// <returns></returns>
     public int GetResult()
     {
-        // First, strip each command of its "mul" and parenthesis, leaving just the comma-separated values.
-        List<string> csvs = this.Commands.Select(cmd => cmd.Substring(4, cmd.Length - 5)).ToList();
+        bool isEnabled = true;
+        int sum = 0;
 
-        // Now split them and cast them to ints.
-        List<int[]> values = csvs
-            .Select(csv => csv.Split(",")
-                .Select(str => int.Parse(str))
-                .ToArray()
-            ).ToList();
+        // Iterate over the commands, which should now be in the correct order.
+        foreach (Command command in this.Commands)
+        {
+            // First, check for Toggle commands and set the enabled state as appropriate.
+            if (command is ToggleEnableCommand toggleCommand)
+            {
+                isEnabled = toggleCommand.Enabled;
+            }
 
-        // Finally, multiply the numbers and sum them up.
-        return values.Sum(val => val[0] * val[1]);
+            // Now process mult commands if enabled.
+            else if (isEnabled && command is MultCommand multCommand)
+            {
+                sum += multCommand.Result;
+            }
+        }
+
+        return sum;
+    }
+
+    /// <summary>
+    /// Parses the input and retuns the list of found do() and don't() commands.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="lineNumber"></param>
+    /// <returns></returns>
+    private List<MultCommand> ParseMultCommands(string input, int lineNumber)
+    {
+        return multiplyPattern.Matches(input)
+                .Select(result => new MultCommand(result.Value, lineNumber, result.Index))
+                .ToList();
+    }
+
+    /// <summary>
+    /// Parses the input and returns the list of found mult() commands.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="lineNumber"></param>
+    /// <returns></returns>
+    private List<ToggleEnableCommand> ParseEnableCommands(string input, int lineNumber)
+    {
+        return enablePattern.Matches(input)
+                .Select(result => new ToggleEnableCommand(result.Value, lineNumber, result.Index))
+                .ToList();
     }
 }
