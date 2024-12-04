@@ -7,7 +7,7 @@ public class InputParser
 
     public InputParser()
     {
-        StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\DayOne\\input.txt");
+        StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day01\\input.txt");
         this.Left = new List<int>();
         this.Right = new List<int>();
 

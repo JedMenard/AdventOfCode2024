@@ -18,7 +18,7 @@ public class InputParser
 
     public InputParser()
     {
-        StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\DayThree\\input.txt");
+        StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day03\\input.txt");
         this.Commands = new List<Command>();
 
         // Parse the results using regex.
