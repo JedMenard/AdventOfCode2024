@@ -15,6 +15,16 @@ public enum DirectionEnum
 public static class DirectionEnumExtensions
 {
     /// <summary>
+    /// All diagonal cardinal directions.
+    /// </summary>
+    public static List<DirectionEnum> DiagonalDirections => new List<DirectionEnum> {
+        DirectionEnum.Northeast,
+        DirectionEnum.Southeast,
+        DirectionEnum.Southwest,
+        DirectionEnum.Northwest
+    };
+
+    /// <summary>
     /// Returns a signed integer representing which North-South direction is being faced.
     /// This assumes the zero coordinate is the Northwestern most point.
     /// If the direction is a Northern direction, returns -1.

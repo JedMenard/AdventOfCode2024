@@ -28,20 +28,20 @@ public class InputParser
     }
 
     /// <summary>
-    /// Finds the overall number of "XMAS" words in the grid.
+    /// Finds the overall number of "MAS" crosswords in the grid.
     /// </summary>
     /// <returns></returns>
     public int FindWordCount()
     {
         int foundWords = 0;
 
-        // Iterate over the whole grid.
-        for (int x = 0; x <= this.MaxXValue; x++)
+        // Iterate over the whole grid, allowing for a one-space padding on each side.
+        for (int x = 1; x < this.MaxXValue; x++)
         {
-            for (int y = 0; y <= this.MaxYValue; y++)
+            for (int y = 1; y < this.MaxYValue; y++)
             {
                 // Check each location for how many words it makes.
-                foundWords += this.CheckAllDirectionsForWord(new Location(x, y));
+                foundWords += this.CheckForCrossword(new Location(x, y)) ? 1 : 0;
             }
         }
 
@@ -49,59 +49,40 @@ public class InputParser
     }
 
     /// <summary>
-    /// Checks all cardinal directions for words that start at the given location.
+    /// Checks the diagonal directions for words that start at the given location.
     /// </summary>
     /// <param name="location"></param>
     /// <returns></returns>
-    private int CheckAllDirectionsForWord(Location location)
+    private bool CheckForCrossword(Location location)
     {
         int foundWords = 0;
 
-        // The word starts with X, so if this character is not X, then there are no words here.
-        if (this.Grid[location] != 'X')
+        // The middle of the word is always 'A', so if this letter is not 'A', then this isn't a crossword.
+        if (this.Grid[location] != 'A')
         {
-            return foundWords;
+            return false;
         }
 
-        // Check each possible direction for a word.
-        foreach (DirectionEnum direction in Enum.GetValues(typeof(DirectionEnum)))
+        // Check each possible diagonal direction for a word.
+        foreach (DirectionEnum direction in DirectionEnumExtensions.DiagonalDirections)
         {
             foundWords += IsWordInDirection(location, direction) ? 1 : 0;
         }
 
-        return foundWords;
+        // For this to be a true crossword, we have to have found two distinct instances of "mas".
+        return foundWords > 1;
     }
 
     /// <summary>
     /// Checks for the letters "MAS" in the given direction.
-    /// Assumes the given location has an X.
+    /// Assumes the given location has an A, and is the middle of the cross.
     /// </summary>
     /// <param name="location"></param>
     /// <param name="direction"></param>
     /// <returns></returns>
     private bool IsWordInDirection(Location location, DirectionEnum direction)
     {
-        if (!this.CanGoInDirection(location, direction))
-        {
-            return false;
-        }
-
-        return this.Grid[location.GetLocationInDirection(direction, 1)] == 'M'
-                    && this.Grid[location.GetLocationInDirection(direction, 2)] == 'A'
-                    && this.Grid[location.GetLocationInDirection(direction, 3)] == 'S';
-    }
-
-    /// <summary>
-    /// Checks if the location three steps away in the given direction from the given point is valid.
-    /// Valid means between zero and the max value, inclusive.
-    /// </summary>
-    /// <param name="location"></param>
-    /// <param name="direction"></param>
-    /// <returns></returns>
-    private bool CanGoInDirection(Location location, DirectionEnum direction)
-    {
-        Location newLocation = location.GetLocationInDirection(direction, 3);
-        return (0 <= newLocation.X && newLocation.X <= this.MaxXValue)
-            && (0 <= newLocation.Y && newLocation.Y <= this.MaxYValue);
+        return this.Grid[location.GetLocationInDirection(direction, -1)] == 'M'
+                    && this.Grid[location.GetLocationInDirection(direction, 1)] == 'S';
     }
 }
