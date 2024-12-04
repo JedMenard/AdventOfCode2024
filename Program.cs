@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day03;
+﻿using AdventOfCode2024.Days.Day04;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().GetResult());
+        Console.WriteLine(new InputParser().FindWordCount());
 
         sw.Stop();
 
