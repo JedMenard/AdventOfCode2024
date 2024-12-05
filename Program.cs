@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().SumValidPageNumbers());
+        Console.WriteLine(new InputParser().SortAndSumInvalidUpdates());
 
         sw.Stop();
 

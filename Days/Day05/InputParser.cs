@@ -46,14 +46,27 @@ public class InputParser
                 List<int> updateValues = line.Split(",").Select(int.Parse).ToList();
 
                 // Add this update to the list.
-                this.updates.Add(new Update(updateValues));
+                this.updates.Add(new Update(updateValues, this.orderingRules));
             }
         }
     }
 
     public int SumValidPageNumbers()
     {
-        return this.updates.Where(u => u.IsValid(this.orderingRules))
+        return this.updates.Where(u => u.IsValid())
             .Sum(u => u.MiddlePageNumber);
+    }
+
+    public int SortAndSumInvalidUpdates()
+    {
+        List<Update> invalidUpdates = this.updates.Where(u => !u.IsValid()).ToList();
+        foreach (Update update in invalidUpdates)
+        {
+            // Page objects have a custom-defined comparator,
+            // so we can just call the .Sort() method here.
+            update.Pages.Sort();
+        }
+
+        return invalidUpdates.Sum(u => u.MiddlePageNumber);
     }
 }
