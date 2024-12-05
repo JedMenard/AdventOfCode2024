@@ -11,12 +11,10 @@ public class InputParser
         StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day02\\input.txt");
         this.reports = new List<Report>();
 
-        string? line = inputFile.ReadLine();
-        while (line != null)
+        for (string? line = inputFile.ReadLine(); line != null; line = inputFile.ReadLine())
         {
             Report report = new Report(line);
             this.reports.Add(report);
-            line = inputFile.ReadLine();
         }
     }
 }
