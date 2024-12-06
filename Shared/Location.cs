@@ -1,4 +1,4 @@
-﻿namespace AdventOfCode2024.Days.Day04;
+﻿namespace AdventOfCode2024.Shared;
 
 public class Location
 {
@@ -7,8 +7,8 @@ public class Location
 
     public Location(int x, int y)
     {
-        this.X = x;
-        this.Y = y;
+        X = x;
+        Y = y;
     }
 
     /// <summary>
@@ -19,8 +19,8 @@ public class Location
     /// <returns></returns>
     public Location GetLocationInDirection(DirectionEnum direction, int steps)
     {
-        int newX = this.X + (direction.HorizontalSign() * steps);
-        int newY = this.Y + (direction.VerticalSign() * steps);
+        int newX = X + direction.HorizontalSign() * steps;
+        int newY = Y + direction.VerticalSign() * steps;
 
         return new Location(newX, newY);
     }
@@ -28,8 +28,9 @@ public class Location
     // Comparator override for dictionary hashing.
     public override bool Equals(object? obj)
     {
-        if (obj is Location other) {
-            return this.X == other.X && this.Y == other.Y;
+        if (obj is Location other)
+        {
+            return X == other.X && Y == other.Y;
         }
 
         return false;
@@ -38,6 +39,6 @@ public class Location
     // Comparator override for dictionary hashing.
     public override int GetHashCode()
     {
-        return (this.X * 10000 + this.Y).GetHashCode();
+        return (X * 10000 + Y).GetHashCode();
     }
 }
