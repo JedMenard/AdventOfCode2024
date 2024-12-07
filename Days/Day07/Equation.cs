@@ -39,16 +39,20 @@ public class Equation
         long second = values[1];
         long additionValue = first + second;
         long productValue = first * second;
+        long concatValue = long.Parse(first.ToString() + second.ToString());
 
         // Base case.
         if (values.Count == 2)
         {
-            return additionValue == this.Result || productValue == this.Result;
+            return additionValue == this.Result
+                || productValue == this.Result
+                || concatValue == this.Result;
         }
 
         // Recursively check if the equation is solveable.
         List<long> remainingValues = values.GetRange(2, values.Count - 2);
         return this.isSolveable(remainingValues.Prepend(additionValue).ToList())
-            || this.isSolveable(remainingValues.Prepend(productValue).ToList());
+            || this.isSolveable(remainingValues.Prepend(productValue).ToList())
+            || this.isSolveable(remainingValues.Prepend(concatValue).ToList());
     }
 }
