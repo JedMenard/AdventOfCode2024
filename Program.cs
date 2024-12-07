@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day06;
+﻿using AdventOfCode2024.Days.Day07;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().CountPotentialTraversalLoops());
+        Console.WriteLine(new InputParser().SumValidEquations());
 
         sw.Stop();
 
