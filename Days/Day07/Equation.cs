@@ -1,9 +1,18 @@
-﻿namespace AdventOfCode2024.Days.Day07;
+﻿using AdventOfCode2024.Days.Day07.Operators;
+
+namespace AdventOfCode2024.Days.Day07;
 
 public class Equation
 {
     public long Result;
     public List<long> Values;
+
+    private static List<Operator> operators = new List<Operator>
+    {
+        new AdditionOperator(),
+        new ProductOperator(),
+        new ConcatOperator()
+    };
 
     public Equation(long result, List<long> values)
     {
@@ -37,22 +46,16 @@ public class Equation
         // Cache some values.
         long first = values[0];
         long second = values[1];
-        long additionValue = first + second;
-        long productValue = first * second;
-        long concatValue = long.Parse(first.ToString() + second.ToString());
+        IEnumerable<long> possibleValues = operators.Select(op => op.Apply(first, second));
 
         // Base case.
         if (values.Count == 2)
         {
-            return additionValue == this.Result
-                || productValue == this.Result
-                || concatValue == this.Result;
+            return possibleValues.Any(val => val == this.Result);
         }
 
         // Recursively check if the equation is solveable.
         List<long> remainingValues = values.GetRange(2, values.Count - 2);
-        return this.isSolveable(remainingValues.Prepend(additionValue).ToList())
-            || this.isSolveable(remainingValues.Prepend(productValue).ToList())
-            || this.isSolveable(remainingValues.Prepend(concatValue).ToList());
+        return possibleValues.Any(val => this.isSolveable(remainingValues.Prepend(val).ToList()));
     }
 }
