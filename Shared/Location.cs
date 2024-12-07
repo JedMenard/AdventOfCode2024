@@ -11,6 +11,12 @@ public class Location
         Y = y;
     }
 
+    public Location(Location other)
+    {
+        this.X = other.X;
+        this.Y = other.Y;
+    }
+
     /// <summary>
     /// Gets the location point in the given direction the given number of steps away.
     /// </summary>
@@ -30,7 +36,7 @@ public class Location
     {
         if (obj is Location other)
         {
-            return X == other.X && Y == other.Y;
+            return this == other;
         }
 
         return false;
@@ -41,4 +47,16 @@ public class Location
     {
         return (X * 10000 + Y).GetHashCode();
     }
+
+    public static bool operator== (Location first, Location second)
+    {
+        return first.X == second.X && first.Y == second.Y;
+    }
+
+    public static bool operator!= (Location first, Location second)
+    {
+
+        return first.X != second.X || first.Y != second.Y;
+    }
+
 }

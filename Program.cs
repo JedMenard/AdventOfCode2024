@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().CountTraversedLocations());
+        Console.WriteLine(new InputParser().CountPotentialTraversalLoops());
 
         sw.Stop();
 
