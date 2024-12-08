@@ -64,6 +64,9 @@ public class InputParser
             // Cache the first node.
             Point firstNode = nodes[i];
 
+            // All nodes are also considered antinodes, so add this to the collection.
+            antiNodes.Add(firstNode);
+
             // Iterate over all remaining nodes.
             for (int j = i + 1; j < nodes.Count; j++)
             {
@@ -74,19 +77,24 @@ public class InputParser
                 int xDifference = firstNode.X - secondNode.X;
                 int yDifference = firstNode.Y - secondNode.Y;
 
-                // Find where the antinodes should be.
+                // Find where the first antinode in the first direction should be.
                 Point firstAntiNode = new Point(firstNode.X + xDifference, firstNode.Y + yDifference);
-                Point secondAntiNode = new Point(secondNode.X - xDifference, secondNode.Y - yDifference);
 
-                // If the anti-nodes are valid in the grid, add them to the set.
-                if (this.grid.PointIsValid(firstAntiNode))
+                // All antinodes in this direction should be counted.
+                while (this.grid.PointIsValid(firstAntiNode))
                 {
                     antiNodes.Add(firstAntiNode);
+                    firstAntiNode = new Point(firstAntiNode.X + xDifference, firstAntiNode.Y + yDifference);
                 }
 
-                if (this.grid.PointIsValid(secondAntiNode))
+                // Find where the first antinode in the second direction should be.
+                Point secondAntiNode = new Point(secondNode.X - xDifference, secondNode.Y - yDifference);
+
+                // All antinodes in this direction should be counted.
+                while (this.grid.PointIsValid(secondAntiNode))
                 {
                     antiNodes.Add(secondAntiNode);
+                    secondAntiNode = new Point(secondAntiNode.X - xDifference, secondAntiNode.Y - yDifference);
                 }
             }
         }
