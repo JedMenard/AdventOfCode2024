@@ -105,4 +105,29 @@ public class Grid<T>
         get => this.grid[point];
         set => this.grid[point] = value;
     }
+
+    /// <summary>
+    /// Helper function to visualize the grid as a string.
+    /// </summary>
+    /// <returns></returns>
+    public override string ToString()
+    {
+        int minX = this.grid.Keys.Min(key => key.X);
+        int maxX = this.grid.Keys.Max(key => key.X);
+        int minY = this.grid.Keys.Min(key => key.Y);
+        int maxY = this.grid.Keys.Max(key => key.Y);
+
+        string gridString = "";
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
+            {
+                gridString += this.grid[new Point(x, y)];
+            }
+
+            gridString += '\n';
+        }
+
+        return gridString;
+    }
 }
