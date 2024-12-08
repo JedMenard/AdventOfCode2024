@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day07;
+﻿using AdventOfCode2024.Days.Day08;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().SumValidEquations());
+        Console.WriteLine(new InputParser().CountAntiNodes());
 
         sw.Stop();
 

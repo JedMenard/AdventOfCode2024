@@ -4,20 +4,20 @@ namespace AdventOfCode2024.Days.Day06;
 
 public class InputParser
 {
-    private Dictionary<Location, char> grid;
-    private Location startingLocation = new Location(0,0);
+    private Dictionary<Point, char> grid;
+    private Point startingLocation = new Point(0,0);
 
     public InputParser()
     {
         StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day06\\input.txt");
-        this.grid = new Dictionary<Location, char>();
+        this.grid = new Dictionary<Point, char>();
 
         int y = 0;
         for (string? line = inputFile.ReadLine(); line != null; line = inputFile.ReadLine(), y++)
         {
             for (int x = 0; x < line.Length; x++)
             {
-                this.grid[new Location(x, y)] = line[x];
+                this.grid[new Point(x, y)] = line[x];
             }
         }
     }
@@ -25,7 +25,7 @@ public class InputParser
     public int CountTraversedLocations()
     {
         // Traverse the map.
-        this.Traverse(this.grid, out Dictionary<Location, HashSet<DirectionEnum>> traversalPath);
+        this.Traverse(this.grid, out Dictionary<Point, HashSet<DirectionEnum>> traversalPath);
 
         // Return the number of spaces that were traversed.
         return traversalPath.Count(kvp => !kvp.Value.IsNullOrEmpty());
@@ -34,18 +34,18 @@ public class InputParser
     public int CountPotentialTraversalLoops()
     {
         // Traverse the map once to get the guard's original path.
-        Dictionary<Location, char> originalPath = this.CopyGrid();
-        Dictionary<Location, HashSet<DirectionEnum>> traversalPath;
+        Dictionary<Point, char> originalPath = this.CopyGrid();
+        Dictionary<Point, HashSet<DirectionEnum>> traversalPath;
         this.Traverse(originalPath, out traversalPath);
 
         // For each location along the path, place a new obstacle and check again.
-        List<Location> potentialObstacles = traversalPath
+        List<Point> potentialObstacles = traversalPath
             .Where(kvp => !kvp.Value.IsNullOrEmpty())
             .Select(kvp => kvp.Key)
             .ToList();
 
         int loopLocations = 0;
-        foreach (Location obstacle in potentialObstacles)
+        foreach (Point obstacle in potentialObstacles)
         {
             // Skip the starting location.
             if (obstacle == startingLocation)
@@ -54,7 +54,7 @@ public class InputParser
             }
 
             // Make a fresh copy of the original grid.
-            Dictionary<Location, char> grid = this.CopyGrid();
+            Dictionary<Point, char> grid = this.CopyGrid();
 
             // Place the obstacle.
             grid[obstacle] = '#';
@@ -71,18 +71,18 @@ public class InputParser
     /// Returns an integer representing the number of potential traversal loops.
     /// </summary>
     /// <returns></returns>
-    private bool Traverse(Dictionary<Location, char> grid, out Dictionary<Location, HashSet<DirectionEnum>> traversalPath)
+    private bool Traverse(Dictionary<Point, char> grid, out Dictionary<Point, HashSet<DirectionEnum>> traversalPath)
     {
         // Keep track of where we've been and which direction we've traversed.
-        traversalPath = new Dictionary<Location, HashSet<DirectionEnum>>();
+        traversalPath = new Dictionary<Point, HashSet<DirectionEnum>>();
 
         // First, figure out where the guard is and which direction she's facing.
-        (Location location, char startingMarker) = grid.First(kvp => "^>V<".Contains(kvp.Value));
+        (Point location, char startingMarker) = grid.First(kvp => "^>V<".Contains(kvp.Value));
         DirectionEnum direction = DirectionEnumExtensions.GetDirectionForCharacter(startingMarker);
-        this.startingLocation = new Location(location);
+        this.startingLocation = new Point(location);
 
         // Now figure out where the guard is going next.
-        Location nextStep = location.GetLocationInDirection(direction, 1);
+        Point nextStep = location.GetNextPointInDirection(direction, 1);
 
         // Start patrolling.
         while (grid.ContainsKey(nextStep))
@@ -108,7 +108,7 @@ public class InputParser
                 traversalPath.AddToSetOrInsert(location, direction);
                 direction = direction.TurnClockwise();
                 grid[location] = direction.GetCharacterForDirection();
-                nextStep = location.GetLocationInDirection(direction, 1);
+                nextStep = location.GetNextPointInDirection(direction, 1);
                 nextStepMarker = grid[nextStep];
                 continue;
             }
@@ -120,7 +120,7 @@ public class InputParser
             nextStepMarker = direction.GetCharacterForDirection();
 
             location = nextStep;
-            nextStep = location.GetLocationInDirection(direction, 1);
+            nextStep = location.GetNextPointInDirection(direction, 1);
         }
 
         // The guard is now leaving the map.
@@ -137,16 +137,16 @@ public class InputParser
     /// Copies the values of a grid into a new grid.
     /// </summary>
     /// <returns></returns>
-    private Dictionary<Location, char> CopyGrid()
+    private Dictionary<Point, char> CopyGrid()
     {
-        Dictionary<Location, char> gridCopy = new Dictionary<Location, char>();
+        Dictionary<Point, char> gridCopy = new Dictionary<Point, char>();
 
-        foreach (KeyValuePair<Location, char> kvp in this.grid)
+        foreach (KeyValuePair<Point, char> kvp in this.grid)
         {
-            Location locationCopy = new Location(kvp.Key);
+            Point locationCopy = new Point(kvp.Key);
             gridCopy[locationCopy] = kvp.Value;
         }
-        return new Dictionary<Location, char>(this.grid);
+        return new Dictionary<Point, char>(this.grid);
     }
 
     /// <summary>
@@ -154,7 +154,7 @@ public class InputParser
     /// </summary>
     /// <param name="grid"></param>
     /// <returns></returns>
-    private string GetGridMap(Dictionary<Location, char> grid)
+    private string GetGridMap(Dictionary<Point, char> grid)
     {
         int maxX = grid.Max(kvp => kvp.Key.X);
         int maxY = grid.Max(kvp => kvp.Key.Y);
@@ -164,7 +164,7 @@ public class InputParser
         {
             for (int x = 0; x < maxX; x++)
             {
-                gridMap += grid[new Location(x, y)];
+                gridMap += grid[new Point(x, y)];
             }
             gridMap += '\n';
         }

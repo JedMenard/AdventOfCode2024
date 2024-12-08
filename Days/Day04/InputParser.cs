@@ -4,21 +4,21 @@ namespace AdventOfCode2024.Days.Day04;
 
 public class InputParser
 {
-    private Dictionary<Location, char> Grid;
+    private Dictionary<Point, char> Grid;
     private int MaxXValue;
     private int MaxYValue;
 
     public InputParser()
     {
         StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day04\\input.txt");
-        this.Grid = new Dictionary<Location, char>();
+        this.Grid = new Dictionary<Point, char>();
 
         int y = 0;
         for (string? line = inputFile.ReadLine(); line != null; line = inputFile.ReadLine())
         {   
             for (int x = 0; x < line.Length; x++)
             {
-                this.Grid[new Location(x, y)] = line[x];
+                this.Grid[new Point(x, y)] = line[x];
                 this.MaxXValue = Math.Max(this.MaxXValue, x);
             }
 
@@ -41,7 +41,7 @@ public class InputParser
             for (int y = 1; y < this.MaxYValue; y++)
             {
                 // Check each location for how many words it makes.
-                foundWords += this.CheckForCrossword(new Location(x, y)) ? 1 : 0;
+                foundWords += this.CheckForCrossword(new Point(x, y)) ? 1 : 0;
             }
         }
 
@@ -53,7 +53,7 @@ public class InputParser
     /// </summary>
     /// <param name="location"></param>
     /// <returns></returns>
-    private bool CheckForCrossword(Location location)
+    private bool CheckForCrossword(Point location)
     {
         int foundWords = 0;
 
@@ -80,9 +80,9 @@ public class InputParser
     /// <param name="location"></param>
     /// <param name="direction"></param>
     /// <returns></returns>
-    private bool IsWordInDirection(Location location, DirectionEnum direction)
+    private bool IsWordInDirection(Point location, DirectionEnum direction)
     {
-        return this.Grid[location.GetLocationInDirection(direction, -1)] == 'M'
-                    && this.Grid[location.GetLocationInDirection(direction, 1)] == 'S';
+        return this.Grid[location.GetNextPointInDirection(direction, -1)] == 'M'
+                    && this.Grid[location.GetNextPointInDirection(direction, 1)] == 'S';
     }
 }
