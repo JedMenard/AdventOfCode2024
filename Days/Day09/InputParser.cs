@@ -1,15 +1,16 @@
-﻿using System.Text;
+﻿using AdventOfCode2024.Shared;
+using System.Text;
 
 namespace AdventOfCode2024.Days.Day09;
 
 public class InputParser
 {
-    private List<int?> blockList;
+    private List<FileBlock> blockList;
 
     public InputParser()
     {
         StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day09\\input.txt");
-        this.blockList = new List<int?>();
+        this.blockList = new List<FileBlock>();
 
         bool isFile = true;
         int fileIdCounter = 0;
@@ -31,13 +32,10 @@ public class InputParser
                     fileId = null;
                 }
 
-                int blockSize = int.Parse(character.ToString());
+                int fileSize = int.Parse(character.ToString());
 
-                // Add the appropriate files the appropriate number of times.
-                for (int i = 0; i < blockSize; i++)
-                {
-                    this.blockList.Add(fileId);
-                }
+                // Add the file.
+                this.blockList.Add(new FileBlock(fileId, fileSize));
 
                 // Toggle the file flag.
                 isFile = !isFile;
@@ -51,54 +49,73 @@ public class InputParser
         return this.GetChecksum();
     }
 
+    /// <summary>
+    /// Defragments the file list.
+    /// </summary>
     private void Defrag()
     {
-        int front = 0;
-        int back = this.blockList.Count - 1;
-
-        while (front < back)
+        // Start at the back of the disk and try to find space to move everything forward.
+        for (int back = this.blockList.Count - 1; back > 0; back--)
         {
-            // Check if the front block is empty.
-            if (this.blockList[front] != null)
-            {
-                // Not an empty space. Iterate forward a step and try again.
-                front++;
-                continue;
-            }
-
             // Check if the back block is empty.
-            if (this.blockList[back] == null)
+            FileBlock backFile = this.blockList[back];
+            if (backFile.IsEmpty)
             {
-                // It is empty. Iterate back a step and try again.
-                back--;
+                // It is empty. Try again on the next file.
                 continue;
             }
 
-            // We are now at a spot where the front block is empty
-            // and the back block is not empty.
-            // Swap the back block into the space of the front block,
-            // and replace it with an empty marker.
-            this.blockList[front] = this.blockList[back];
-            this.blockList[back] = null;
+            // Find the first empty block from the front that has room for this block.
+            for (int front = 0; front < back; front++)
+            {
+                FileBlock frontFile = this.blockList[front];
+
+                // Check if this is an empty space that can fit this file.
+                if (!frontFile.IsEmpty || frontFile.Size < backFile.Size)
+                {
+                    // Nope. Try again with the next block.
+                    continue;
+                }
+
+                // We are now at a spot where the front file is empty
+                // and big enough to fit the back file.
+                // Shrink the empty file at the front,
+                // swap the back file into the space of the front file,
+                // and replace it with an empty file at the back.
+                this.blockList[front].Size -= backFile.Size;
+                this.blockList.Insert(front, new FileBlock(backFile.FileId, backFile.Size));
+                backFile.FileId = null;
+                break;
+            }
         }
 
         // The blocklist should now be successfully defragmented.
     }
 
+    /// <summary>
+    /// Computes the checksum of the disk.
+    /// </summary>
+    /// <returns></returns>
     private long GetChecksum()
     {
         long checkSum = 0;
         // The checksum is computed by multiplying a positional index by the value at the index.
-        for (int index = 0; index < this.blockList.Count; index++)
+        int index = 0;
+        foreach (FileBlock file in this.blockList)
         {
-            // We only care about the numbers, which should all be at the front.
-            int? fileId = this.blockList[index];
-            if (!fileId.HasValue)
+            // We only care about the filled files.
+            if (file.IsEmpty)
             {
-                break;
+                // Increment the index and continue.
+                index += file.Size;
+                continue;
             }
 
-            checkSum += index * fileId.Value;
+            // Increase the checksum for each index in the file.
+            for (int i = 0; i < file.Size; i++)
+            {
+                checkSum += index++ * file.FileId.Value;
+            }
         }
 
         return checkSum;
