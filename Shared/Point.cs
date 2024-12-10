@@ -61,7 +61,7 @@ public class Point
     // Comparator override for dictionary hashing.
     public override int GetHashCode()
     {
-        return this.ToString().GetHashCode();
+        return HashCode.Combine(this.X, this.Y);
     }
 
 }

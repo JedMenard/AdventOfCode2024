@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day09;
+﻿using AdventOfCode2024.Days.Day10;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().DefragAndGetChecksum());
+        Console.WriteLine(new InputParser().SumTrailheadScores());
 
         sw.Stop();
 

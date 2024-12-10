@@ -15,6 +15,21 @@ public enum DirectionEnum
 public static class DirectionEnumExtensions
 {
     /// <summary>
+    /// All cardinal directions.
+    /// </summary>
+    /// <returns></returns>
+    public static List<DirectionEnum> CardinalDirections()
+    {
+        return new List<DirectionEnum>
+        {
+            DirectionEnum.North,
+            DirectionEnum.East,
+            DirectionEnum.South,
+            DirectionEnum.West
+        };
+    }
+
+    /// <summary>
     /// All diagonal cardinal directions.
     /// </summary>
     public static List<DirectionEnum> DiagonalDirections => new List<DirectionEnum> {
