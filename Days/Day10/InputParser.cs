@@ -31,26 +31,26 @@ public class InputParser
     {
         List<Point> trailheads = this.GetTrailheads();
 
-        return trailheads.Sum(trailhead => this.GetPeaks(trailhead).Count);
+        return trailheads.Sum(this.GetRating);
     }
 
     /// <summary>
-    /// Returns a set containing all unique peaks reachable from the provided point.
+    /// Returns the number of distinct paths that lead to a peak from the given point.
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
-    private HashSet<Point> GetPeaks(Point point)
+    private int GetRating(Point point)
     {
         int height = this.grid[point];
 
         // Base case: We're at the end of the trail, return one.
         if (height == 9)
         {
-            return new HashSet<Point> { point };
+            return 1;
         }
 
-        // Otherwise, check each direction and return all possible peaks.
-        HashSet<Point> peaks = new HashSet<Point>();
+        // Otherwise, check each direction and sum the results.
+        int score = 0;
         foreach (DirectionEnum direction in DirectionEnumExtensions.CardinalDirections())
         {
             Point nextPoint = point.GetNextPointInDirection(direction);
@@ -63,10 +63,10 @@ public class InputParser
             }
 
             // This path is valid, get the score.
-            peaks = peaks.Union(this.GetPeaks(nextPoint)).ToHashSet();
+            score += this.GetRating(nextPoint);
         }
 
-        return peaks;
+        return score;
     }
 
     /// <summary>
