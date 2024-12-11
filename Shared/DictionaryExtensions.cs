@@ -1,4 +1,6 @@
 ﻿
+using System.Numerics;
+
 namespace AdventOfCode2024.Shared;
 
 public static class DictionaryExtensions
@@ -38,5 +40,24 @@ public static class DictionaryExtensions
         }
 
         dictionary[key].Add(val);
+    }
+
+    /// <summary>
+    /// Helper to sum a new number with the value in the dictionary at the given key.
+    /// If the key is not in the dictionary yet, inserts the provided value.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
+    /// <param name="dictionary"></param>
+    /// <param name="key"></param>
+    /// <param name="val"></param>
+    public static void SumOrInsert<TKey, TValue> (this Dictionary<TKey, TValue> dictionary, TKey key, TValue val) where TValue : INumber<TValue>
+    {
+        if (!dictionary.ContainsKey(key))
+        {
+            dictionary[key] = TValue.Zero;
+        }
+
+        dictionary[key] += val;
     }
 }

@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().CountRocksAfterBlinks(25));
+        Console.WriteLine(new InputParser().CountRocksAfterBlinks(75));
 
         sw.Stop();
 
