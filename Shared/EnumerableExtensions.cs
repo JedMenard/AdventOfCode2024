@@ -21,6 +21,7 @@ public static class EnumerableExtensions
             }
 
             str += val.ToString();
+            isFirst = false;
         }
 
         return str;
