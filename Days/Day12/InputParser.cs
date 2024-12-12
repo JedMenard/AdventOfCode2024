@@ -19,4 +19,12 @@ public class InputParser
 
         return regions.Sum(region => region.Area * region.Perimeter);
     }
+
+    public int SumBulkFenceCost()
+    {
+        // First, get all the contiguous regions in the grid.
+        List<Grid<char>> regions = this.grid.GetContiguousRegions();
+
+        return regions.Sum(region => region.Area * region.CountSides());
+    }
 }

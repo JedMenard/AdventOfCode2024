@@ -90,6 +90,20 @@ public static class DirectionEnumExtensions
     }
 
     /// <summary>
+    /// Whether the point is a vertical cardinal direction (North or South).
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public static bool IsVertical(this DirectionEnum direction) => direction == DirectionEnum.North || direction == DirectionEnum.South;
+
+    /// <summary>
+    /// Whether the point is a horizontal cardinal direction (East or West).
+    /// </summary>
+    /// <param name="direction"></param>
+    /// <returns></returns>
+    public static bool IsHorizontal(this DirectionEnum direction) => direction == DirectionEnum.East || direction == DirectionEnum.West;
+
+    /// <summary>
     /// Returns the direction that is <paramref name="steps"/> steps in the clockwise direction.
     /// Defaults to a 90 degree turn.
     /// </summary>

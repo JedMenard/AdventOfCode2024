@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().SumFenceCost());
+        Console.WriteLine(new InputParser().SumBulkFenceCost());
 
         sw.Stop();
 

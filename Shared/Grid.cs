@@ -13,6 +13,18 @@ public class Grid<T>
     /// </summary>
     private Dictionary<Point, T?> grid;
 
+    /// <summary>
+    /// Returns the area of the grid.
+    /// </summary>
+    /// <returns></returns>
+    public int Area => this.grid.Keys.Count;
+
+    /// <summary>
+    /// Returns the perimeter of the grid.
+    /// </summary>
+    /// <returns></returns>
+    public int Perimeter => this.Keys.Sum(point => point.GetAdjacentPoints().Count(next => !this.PointIsValid(next)));
+
     #endregion
 
     #region Constructors
@@ -186,16 +198,67 @@ public class Grid<T>
     }
 
     /// <summary>
-    /// Returns the area of the grid.
+    /// Counts the number of distinct sides that the grid has.
     /// </summary>
     /// <returns></returns>
-    public int Area => this.grid.Keys.Count;
+    public int CountSides()
+    {
+        int sideCount = 0;
 
-    /// <summary>
-    /// Returns the perimeter of the grid.
-    /// </summary>
-    /// <returns></returns>
-    public int Perimeter => this.Keys.Sum(point => point.GetAdjacentPoints().Count(next => !this.PointIsValid(next)));
+        foreach (DirectionEnum direction in DirectionEnumExtensions.CardinalDirections)
+        {
+            // Instantiate an empty list representing all the points
+            // that have a side in the given direction.
+            List<Point> sides = new List<Point>();
+
+            // Iterate over the grid.
+            foreach (Point point in this.Keys)
+            {
+                // If the point is a side in the correct direciton, add it to the list.
+                if (!this.PointIsValid(point.GetNextPointInDirection(direction)))
+                {
+                    sides.Add(point);
+                }
+            }
+
+            // We now have a list representing all side points in the given direction.
+            // Order them, so that we can count which ones are contiguous.
+            sides = direction.IsHorizontal()
+                ? sides.OrderBy(side => side.X).ThenBy(side => side.Y).ToList()
+                : sides.OrderBy(side => side.Y).ThenBy(side => side.X).ToList();
+
+            // Get our starting values.
+            int sections = 1;
+            Point previousPoint = sides[0];
+
+            // We are traversing our lists from top-left to bottom-right.
+            DirectionEnum orthogonalDirection = direction.IsHorizontal()
+                ? DirectionEnum.South
+                : DirectionEnum.East;
+
+            // Count how many contiguous sections there are.
+            for (int i = 1; i < sides.Count; i++)
+            {
+                Point currentPoint = sides[i];
+
+                // If this point is one step in the orthogonal direction from the previous point,
+                // then it is considered part of the same side.
+                // Otherwise, we've found a new side, so increment the counter.
+                if (previousPoint.GetNextPointInDirection(orthogonalDirection) != currentPoint)
+                {
+                    sections++;
+                }
+
+                // Update our loop variable.
+                previousPoint = currentPoint;
+            }
+
+            // Add the count from this direction to the overall count.
+            sideCount += sections;
+        }
+
+        return sideCount;
+    }
 
     #endregion
 
