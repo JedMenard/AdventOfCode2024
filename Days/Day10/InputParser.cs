@@ -51,7 +51,7 @@ public class InputParser
 
         // Otherwise, check each direction and sum the results.
         int score = 0;
-        foreach (DirectionEnum direction in DirectionEnumExtensions.CardinalDirections())
+        foreach (DirectionEnum direction in DirectionEnumExtensions.CardinalDirections)
         {
             Point nextPoint = point.GetNextPointInDirection(direction);
 

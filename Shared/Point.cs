@@ -17,20 +17,6 @@ public class Point
         this.Y = other.Y;
     }
 
-    /// <summary>
-    /// Gets the point in the given direction the given number of steps away.
-    /// </summary>
-    /// <param name="direction"></param>
-    /// <param name="steps"></param>
-    /// <returns></returns>
-    public Point GetNextPointInDirection(DirectionEnum direction, int steps = 1)
-    {
-        int newX = X + direction.HorizontalSign() * steps;
-        int newY = Y + direction.VerticalSign() * steps;
-
-        return new Point(newX, newY);
-    }
-
     // Comparator override for dictionary hashing.
     public override bool Equals(object? obj)
     {

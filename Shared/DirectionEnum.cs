@@ -18,21 +18,19 @@ public static class DirectionEnumExtensions
     /// All cardinal directions.
     /// </summary>
     /// <returns></returns>
-    public static List<DirectionEnum> CardinalDirections()
+    public static List<DirectionEnum> CardinalDirections => new List<DirectionEnum>
     {
-        return new List<DirectionEnum>
-        {
-            DirectionEnum.North,
-            DirectionEnum.East,
-            DirectionEnum.South,
-            DirectionEnum.West
-        };
-    }
+        DirectionEnum.North,
+        DirectionEnum.East,
+        DirectionEnum.South,
+        DirectionEnum.West
+    };
 
     /// <summary>
     /// All diagonal cardinal directions.
     /// </summary>
-    public static List<DirectionEnum> DiagonalDirections => new List<DirectionEnum> {
+    public static List<DirectionEnum> DiagonalDirections => new List<DirectionEnum>
+    {
         DirectionEnum.Northeast,
         DirectionEnum.Southeast,
         DirectionEnum.Southwest,
@@ -64,7 +62,6 @@ public static class DirectionEnumExtensions
 
         return 1;
     }
-
 
     /// <summary>
     /// Returns a signed integer representing which East-West direction is being faced.

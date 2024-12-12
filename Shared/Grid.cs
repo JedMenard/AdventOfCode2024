@@ -6,10 +6,24 @@
 /// <typeparam name="T"></typeparam>
 public class Grid<T>
 {
+    #region Properties
+
     /// <summary>
     /// Private dictionary tracking the values of the grid.
     /// </summary>
     private Dictionary<Point, T?> grid;
+
+    #endregion
+
+    #region Constructors
+
+    /// <summary>
+    /// Default constructor for an empty grid.
+    /// </summary>
+    public Grid()
+    {
+        this.grid = new Dictionary<Point, T?>();
+    }
 
     /// <summary>
     /// Constructor from a pre-calculated dictionary.
@@ -56,6 +70,10 @@ public class Grid<T>
         return new Grid<char>(grid);
     }
 
+    #endregion
+
+    #region Helpers
+
     /// <summary>
     /// Checks if there is a non-null value at the provided point.
     /// </summary>
@@ -85,6 +103,105 @@ public class Grid<T>
     }
 
     /// <summary>
+    /// Iterates over the whole grid to find all contiguous regions.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <returns></returns>
+    public List<Grid<T>> GetContiguousRegions()
+    {
+        // Start with an empty collection.
+        List<Grid<T>> contiguousRegions = new List<Grid<T>>();
+
+        // Iterate over each point and find all contiguous regions.
+        foreach (Point point in this.Keys)
+        {
+            // If we've already processed this point, skip it.
+            if (contiguousRegions.Any(reg => reg.PointIsValid(point)))
+            {
+                continue;
+            }
+
+            // This is a new point for which we have not yet found a contiguous region.
+            // Process it, and add the region to the collection.
+            contiguousRegions.Add(this.GetContiguousRegion(point));
+        }
+
+        return contiguousRegions;
+    }
+
+    /// <summary>
+    /// Returns a grid representing the contiguous region of similar values around the provided point.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    public Grid<T> GetContiguousRegion(Point point)
+    {
+        return this.GetContiguousRegion(point, new Grid<T>());
+    }
+
+    /// <summary>
+    /// Recursively traverses a grid from a starting point to find all contiguous points.
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="point"></param>
+    /// <param name="output"></param>
+    /// <returns></returns>
+    private Grid<T> GetContiguousRegion(Point point, Grid<T> output)
+    {
+        T? value = this[point];
+
+        if (value == null)
+        {
+            throw new ArgumentException("Attempting to find contiguous regions for an empty point on the grid.");
+        }
+
+        // First, add the current point to the output.
+        output[point] = value;
+
+        // Now determine all potential next points.
+        foreach (Point nextPoint in point.GetAdjacentPoints())
+        {
+            // If the next point is outside the original grid,
+            // if there is no value in the original grid at the next point,
+            // or if the values are not the same,
+            // then skip this point.
+            if (!this.PointIsValid(nextPoint)
+                || !this.PointIsFilled(nextPoint)
+                || !value.Equals(this[nextPoint]))
+            {
+                continue;
+            }
+
+            // This point is a valid contiguous region.
+            // If we haven't visited it already, then process it recursively.
+            if (!output.PointIsValid(nextPoint))
+            {
+                output = this.GetContiguousRegion(nextPoint, output);
+            }
+        }
+
+        // Done processing the grid, return the output.
+        return output;
+    }
+
+    /// <summary>
+    /// Returns the area of the grid.
+    /// </summary>
+    /// <returns></returns>
+    public int Area => this.grid.Keys.Count;
+
+    /// <summary>
+    /// Returns the perimeter of the grid.
+    /// </summary>
+    /// <returns></returns>
+    public int Perimeter => this.Keys.Sum(point => point.GetAdjacentPoints().Count(next => !this.PointIsValid(next)));
+
+    #endregion
+
+    #region Enumeration
+
+    /// <summary>
     /// Gets a collection containing the keys in the grid.
     /// </summary>
     public IEnumerable<Point> Keys => this.grid.Keys;
@@ -98,6 +215,10 @@ public class Grid<T>
     /// Returns the grid as an iterable collection of KeyValuePairs.
     /// </summary>
     public IEnumerable<KeyValuePair<Point, T?>> AsEnumerable => this.grid.AsEnumerable();
+
+    #endregion
+
+    #region Overrides
 
     // Accessor override.
     public T? this[Point point]
@@ -130,4 +251,6 @@ public class Grid<T>
 
         return gridString;
     }
+
+    #endregion
 }

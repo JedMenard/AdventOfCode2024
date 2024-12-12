@@ -34,7 +34,6 @@ public class Equation
     /// </summary>
     /// <param name="values"></param>
     /// <returns></returns>
-    /// <exception cref="NotImplementedException"></exception>
     private bool isSolveable(List<long> values)
     {
         // This should never happen, but check for good measure.
