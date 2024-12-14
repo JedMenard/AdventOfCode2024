@@ -8,10 +8,12 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        Console.WriteLine(new InputParser().SumTokenCost());
+        string result = new InputParser().SumTokenCost().ToString();
 
         sw.Stop();
 
+        Console.WriteLine(result);
+        Debug.WriteLine(result);
         Console.WriteLine($"Processing time (ms): {sw.ElapsedMilliseconds}");
     }
 }

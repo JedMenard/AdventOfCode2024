@@ -1,10 +1,13 @@
-﻿namespace AdventOfCode2024.Days.Day13;
+﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+
+namespace AdventOfCode2024.Days.Day13;
 
 public class ClawMachine
 {
-    private (int X, int Y) buttonA;
-    private (int X, int Y) buttonB;
-    private (int X, int Y) prize;
+    private (long X, long Y) buttonA;
+    private (long X, long Y) buttonB;
+    private (long X, long Y) prize;
 
     private const int MAX_BUTTON_PRESSES = 100;
 
@@ -72,45 +75,49 @@ public class ClawMachine
         // Store the results.
         this.buttonA = (buttonAValues[0], buttonAValues[1]);
         this.buttonB = (buttonBValues[0], buttonBValues[1]);
-        this.prize = (prizeValues[0], prizeValues[1]);
+        this.prize = (10000000000000 + prizeValues[0], 10000000000000 + prizeValues[1]);
     }
 
-    public int GetMinCoinCount()
+    public long GetMinCoinCount()
     {
-        (int aPresses, int bPresses)? solution = this.FindSolution();
+        (long aPresses, long bPresses)? solution = this.FindSolution();
 
         return solution.HasValue
             ? solution.Value.aPresses * 3 + solution.Value.bPresses
             : 0;
     }
 
-    private (int aPresses, int bPresses)? FindSolution()
+    private (long aPresses, long bPresses)? FindSolution()
     {
-        // First, start with the upper bound for how many times we might have to press the B button.
-        int maxBPresses = Math.Min(this.prize.X / this.buttonB.X, this.prize.Y / this.buttonB.Y);
-        maxBPresses = Math.Min(maxBPresses, MAX_BUTTON_PRESSES);
-
-        // Iterate backwards to zero to find the minimum number of times we can press the A button.
-        for (; maxBPresses >= 0; maxBPresses--)
+        // Set up our matrices.
+        Matrix<double> A = DenseMatrix.OfArray(new double[,]
         {
-            int remainingX = this.prize.X - (this.buttonB.X * maxBPresses);
-            int remainingY = this.prize.Y - (this.buttonB.Y * maxBPresses);
+            { buttonA.X, buttonB.X },
+            { buttonA.Y, buttonB.Y }
+        });
 
-            if (remainingX % this.buttonA.X != 0 || remainingY % this.buttonA.Y != 0)
-            {
-                // No amount of A presses will get us to the prize, so skip this loop.
-                continue;
-            }
+        Matrix<double> B = DenseMatrix.OfArray(new double[,]
+        {
+            { prize.X },
+            { prize.Y }
+        });
 
-            // Verify that both the X and Y values will be satisfied in the same number of presses.
-            int aPressesForX = remainingX / this.buttonA.X;
-            int aPressesForY = remainingY / this.buttonA.Y;
-            if (aPressesForX == aPressesForY)
-            {
-                return (aPressesForX, maxBPresses);
-            }
+        // Solve the system.
+        Matrix<double> solution = A.Solve(B);
+
+        // Cast to integers and parse out.
+        long aPresses = (long)Math.Round(solution[0, 0]);
+        long bPresses = (long)Math.Round(solution[1, 0]);
+
+        // Verify that the solution is still valid.
+        // If not, then there is no integer solution to the equation.
+        if (this.buttonA.X * aPresses + this.buttonB.X * bPresses != this.prize.X
+            || this.buttonA.Y * aPresses + this.buttonB.Y * bPresses != this.prize.Y)
+        {
+            return null;
         }
 
-        return null;
+        // Solution found.
+        return (aPresses, bPresses);
     }
 }

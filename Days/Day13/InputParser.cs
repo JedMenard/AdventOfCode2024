@@ -25,7 +25,7 @@ public class InputParser
         }
     }
 
-    public int SumTokenCost()
+    public long SumTokenCost()
     {
         return this.clawMachines.Sum(claw => claw.GetMinCoinCount());
     }
