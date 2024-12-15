@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().SumCoordinatesAfterMoves().ToString();
+        string result = new InputParser(true).SumCoordinatesAfterMoves().ToString();
 
         sw.Stop();
 

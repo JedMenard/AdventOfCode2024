@@ -1,4 +1,5 @@
 ﻿using AdventOfCode2024.Shared;
+using System.Diagnostics;
 
 namespace AdventOfCode2024.Days.Day15;
 
@@ -7,28 +8,24 @@ public class InputParser
     private Robot robot;
     private Grid<char> grid;
 
-    public InputParser()
+    public InputParser(bool useWideVersion = false)
     {
         StreamReader inputFile = new StreamReader("F:\\Projects\\AdventOfCode2024\\Days\\Day15\\input.txt");
 
         // The input file is separated into two parts:
         // the grid first, and the robot's moves second.
         // First, parse out the grid.
-        List<string> gridInput = new List<string>();
-        string? line = inputFile.ReadLine();
-        while (!line.IsNullOrEmpty())
-        {
-            gridInput.Add(line);
-            line = inputFile.ReadLine();
-        }
+        Warehouse warehouse = new Warehouse(inputFile);
 
-        this.grid = Grid<char>.FromStrings(gridInput);
+        this.grid = useWideVersion
+            ? Grid<char>.FromStrings(warehouse.WideVersion)
+            : Grid<char>.FromStrings(warehouse.Original);
 
         // Now find the robot's starting position.
         Point robotStart = grid.AsEnumerable.First(kvp => kvp.Value == '@').Key;
 
         // Lastly, create the robot.
-        line = inputFile.ReadLine();
+        string line = inputFile.ReadLine();
 
         if (line == null)
         {
@@ -50,10 +47,11 @@ public class InputParser
     {
         // Move the robot.
         this.robot.MoveToCompletion(this.grid);
+        Debug.WriteLine(this.grid.ToString());
 
         // Sum the coordinates.
         return this.grid.AsEnumerable
-            .Where(kvp => kvp.Value == 'O')
+            .Where(kvp => kvp.Value == 'O' || kvp.Value == '[')
             .Select(kvp => kvp.Key)
             .Sum(point => 100 * point.Y + point.X);
     }
