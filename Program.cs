@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day13;
+﻿using AdventOfCode2024.Days.Day14;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().SumTokenCost().ToString();
+        string result = new InputParser().CountRobotsInQuadrants().ToString();
 
         sw.Stop();
 
