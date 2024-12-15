@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().CountRobotsInQuadrants().ToString();
+        string result = new InputParser().FindEasterEgg().ToString();
 
         sw.Stop();
 
