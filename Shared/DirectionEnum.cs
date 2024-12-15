@@ -132,6 +132,7 @@ public static class DirectionEnumExtensions
             case '>':
                 return DirectionEnum.East;
             case 'V':
+            case 'v':
                 return DirectionEnum.South;
             case '<':
                 return DirectionEnum.West;

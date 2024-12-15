@@ -1,4 +1,6 @@
-﻿namespace AdventOfCode2024.Shared;
+﻿using System.IO;
+
+namespace AdventOfCode2024.Shared;
 
 /// <summary>
 /// Helper class to encapsulate a grid of points.
@@ -67,9 +69,27 @@ public class Grid<T>
     /// <returns></returns>
     public static Grid<char> FromStreamReader(StreamReader stream)
     {
+        List<string> gridInput = new List<string>();
+        string? line = stream.ReadLine();
+        while (!line.IsNullOrEmpty())
+        {
+            gridInput.Add(line);
+            line = stream.ReadLine();
+        }
+
+        return FromStrings(gridInput);
+    }
+
+    /// <summary>
+    /// Static constructor for the common case of reading text from a list of strings.
+    /// </summary>
+    /// <param name="gridInput"></param>
+    /// <returns></returns>
+    public static Grid<char> FromStrings(IEnumerable<string> gridInput)
+    {
         Dictionary<Point, char> grid = new Dictionary<Point, char>();
         int y = 0;
-        for (string? line = stream.ReadLine(); line != null; line = stream.ReadLine())
+        foreach (string line in gridInput)
         {
             for (int x = 0; x < line.Length; x++)
             {

@@ -7,6 +7,6 @@ public static class StringExtensions
     /// </summary>
     /// <param name="str"></param>
     /// <returns></returns>
-    public static bool IsNullOrEmpty(this string str)
+    public static bool IsNullOrEmpty(this string? str)
         => string.IsNullOrEmpty(str);
 }
