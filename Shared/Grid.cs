@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections;
+using System.IO;
 
 namespace AdventOfCode2024.Shared;
 
@@ -6,7 +7,7 @@ namespace AdventOfCode2024.Shared;
 /// Helper class to encapsulate a grid of points.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public class Grid<T>
+public class Grid<T> : IEnumerable<KeyValuePair<Point, T>>
 {
     #region Properties
 
@@ -334,6 +335,9 @@ public class Grid<T>
 
         return gridString;
     }
+
+    IEnumerator<KeyValuePair<Point, T>> IEnumerable<KeyValuePair<Point, T>>.GetEnumerator() => this.grid.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => this.grid.GetEnumerator();
 
     #endregion
 }

@@ -112,6 +112,9 @@ public static class DirectionEnumExtensions
     /// <returns></returns>
     public static DirectionEnum TurnClockwise(this DirectionEnum direction, int steps = 2)
     {
+        // Account for negatives.
+        steps = steps < 0 ? steps + 8 : steps;
+
         // Use modulus math to simplify the logic.
         return (DirectionEnum)((int)(direction + steps) % 8);
     }

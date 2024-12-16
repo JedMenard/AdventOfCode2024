@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day15;
+﻿using AdventOfCode2024.Days.Day16;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser(true).SumCoordinatesAfterMoves().ToString();
+        string result = new InputParser().GetMinimumDistance().ToString();
 
         sw.Stop();
 

@@ -29,4 +29,34 @@ public static class PointExtensions
         return DirectionEnumExtensions.CardinalDirections
             .Select(direction => point.GetNextPointInDirection(direction, steps));
     }
+
+    public static DirectionEnum GetDirectionToPoint(this Point first, Point second)
+    {
+        if (!first.GetAdjacentPoints().Contains(second))
+        {
+            throw new ArgumentException("Points must be adjacent");
+        }
+
+        if (first == second)
+        {
+            throw new ArgumentException("Points must be distinct");
+        }
+
+        if (first.X > second.X)
+        {
+            return DirectionEnum.West;
+        }
+        else if (first.X < second.X)
+        {
+            return DirectionEnum.East;
+        }
+        else if (first.Y > second.Y)
+        {
+            return DirectionEnum.North;
+        }
+        else
+        {
+            return DirectionEnum.South;
+        }
+    }
 }
