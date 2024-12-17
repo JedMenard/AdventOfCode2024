@@ -17,4 +17,9 @@ public class InputParser
     {
         return this.game.FindDistanceToEnd();
     }
+
+    public int CountPointsAlongShortestPaths()
+    {
+        return this.game.CountPointsAlongShortestPaths();
+    }
 }

@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().GetMinimumDistance().ToString();
+        string result = new InputParser().CountPointsAlongShortestPaths().ToString();
 
         sw.Stop();
 
