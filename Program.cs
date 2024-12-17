@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day16;
+﻿using AdventOfCode2024.Days.Day17;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().CountPointsAlongShortestPaths().ToString();
+        string result = new InputParser().ExecuteProgram().ToString();
 
         sw.Stop();
 
