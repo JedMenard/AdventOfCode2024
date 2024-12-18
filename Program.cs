@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day17;
+﻿using AdventOfCode2024.Days.Day18;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().FindCopyValue().ToString();
+        string result = new InputParser(1024).GetMinStepsToEnd().ToString();
 
         sw.Stop();
 

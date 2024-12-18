@@ -64,6 +64,25 @@ public class Grid<T> : IEnumerable<KeyValuePair<Point, T>>
     }
 
     /// <summary>
+    /// Default-value constructor for a grid of a given size.
+    /// </summary>
+    /// <param name="maxX"></param>
+    /// <param name="maxY"></param>
+    /// <param name="defaultValue"></param>
+    public Grid(int maxX, int maxY, T defaultValue)
+    {
+        this.grid = new Dictionary<Point, T?>();
+
+        for (int y = 0; y <= maxY; y++)
+        {
+            for (int x = 0; x <= maxX; x++)
+            {
+                this.grid[new Point(x, y)] = defaultValue;
+            }
+        }
+    }
+
+    /// <summary>
     /// Static constructor for the common case of reading text from a file.
     /// </summary>
     /// <param name="stream"></param>
