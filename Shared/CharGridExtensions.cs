@@ -61,4 +61,60 @@ public static class CharGridExtensions
             // The point is either a wall or off the map, so there's nothing left to do.
         }
     }
+
+    /// <summary>
+    /// Determines a single shortest path from the start to the end.
+    /// </summary>
+    /// <param name="dijkstraMap"></param>
+    /// <param name="startPoint"></param>
+    /// <param name="endPoint"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static List<Point> GetShortestPathFromDijkstaMap(this Grid<int?> dijkstraMap, Point startPoint, Point endPoint)
+    {
+        // Make sure there is a valid end point.
+        if (!dijkstraMap.PointIsValid(endPoint)
+            || !dijkstraMap.PointIsFilled(endPoint))
+        {
+            throw new ArgumentException("Dijkstra map contains no paths to end point.");
+        }
+
+        // Start at the end and work backwards.
+        Point currentPoint = endPoint;
+        List<Point> path = new List<Point> { endPoint };
+        int currentDistance = dijkstraMap[endPoint].Value;
+
+        // Keep going until we're at the start.
+        while (currentPoint != startPoint)
+        {
+            // This method only returns a single path to the end, rather than all paths.
+            // To that end, we don't care how many other points next to our current point
+            // would lead back to the start, we just need any arbitrary point.
+            foreach (Point nextPoint in currentPoint.GetAdjacentPoints())
+            {
+                // Skip points that are off the map or have no valid paths.
+                if (!dijkstraMap.PointIsValid(nextPoint)
+                    || !dijkstraMap.PointIsFilled(nextPoint))
+                {
+                    continue;
+                }
+
+                // Check if we're heading in the right direction.
+                int nextDistance = dijkstraMap[nextPoint].Value;
+                if (nextDistance < currentDistance)
+                {
+                    // We are! Ignore the remaining points, and move towards this one.
+                    path.Add(nextPoint);
+                    currentDistance = nextDistance;
+                    currentPoint = nextPoint;
+                    break;
+                }
+            }
+        }
+
+        // We should now be at the end.
+        // Reverse the list so it's in the right order, and return it.
+        path.Reverse();
+        return path;
+    }
 }

@@ -342,6 +342,18 @@ public class Grid<T> : IEnumerable<KeyValuePair<Point, T>>
         int maxY = this.grid.Keys.Max(key => key.Y);
 
         string gridString = "";
+
+        // Add a header string.
+        for (int x = minX; x <= maxX; x++)
+        {
+            // Mod the X value by 10 to keep it to one digit.
+            gridString += (x % 10).ToString();
+        }
+
+        // Add a newline to separate the header.
+        gridString += '\n';
+
+        // Print the grid.
         for (int y = minY; y <= maxY; y++)
         {
             for (int x = minX; x <= maxX; x++)
@@ -349,7 +361,8 @@ public class Grid<T> : IEnumerable<KeyValuePair<Point, T>>
                 gridString += this.grid[new Point(x, y)];
             }
 
-            gridString += '\n';
+            // Add a header to the right side of the Y axis.
+            gridString += ' ' + y.ToString() + '\n';
         }
 
         return gridString;

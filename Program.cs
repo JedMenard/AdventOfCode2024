@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser(1024).GetMinStepsToEnd().ToString();
+        string result = new InputParser().FindFirstBlockingWall().ToString() ?? "No valid path.";
 
         sw.Stop();
 
