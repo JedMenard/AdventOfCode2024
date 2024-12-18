@@ -44,7 +44,7 @@ public class InputParser
     public long FindCopyValue()
     {
         string output = "";
-        long i = 50000000000;
+        long i = 56368771254;
         long? solution = null;
 
         HashSet<long> testedNumbers = new HashSet<long>();
