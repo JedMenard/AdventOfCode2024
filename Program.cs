@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().ExecuteProgram().ToString();
+        string result = new InputParser().FindCopyValue().ToString();
 
         sw.Stop();
 

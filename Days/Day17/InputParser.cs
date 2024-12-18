@@ -5,6 +5,7 @@ namespace AdventOfCode2024.Days.Day17;
 public class InputParser
 {
     private Computer computer;
+    private string programString;
 
     public InputParser()
     {
@@ -30,13 +31,50 @@ public class InputParser
         // The registers and program are separated by an empty line.
         // We've already hit the empty line though, thanks to the loop above.
         // All that's left is the program.
-        string program = inputFile.ReadLine().Substring("Program: ".Length);
+        this.programString = inputFile.ReadLine().Substring("Program: ".Length);
 
-        this.computer = new Computer(registers[0], registers[1], registers[2], program);
+        this.computer = new Computer(registers[0], registers[1], registers[2], this.programString);
     }
 
     public string ExecuteProgram()
     {
         return this.computer.ExecuteProgram();
+    }
+
+    public long FindCopyValue()
+    {
+        string output = "";
+        long i = 50000000000;
+        long? solution = null;
+
+        HashSet<long> testedNumbers = new HashSet<long>();
+
+        // Loop until we get the output we want.
+        while (!solution.HasValue)
+        {
+            // Increment the counter.
+            i += 1;
+
+            // This equation determines the first character output by the computer.
+            if ((((i % 8) ^ 4) ^ (long)(i / Math.Pow(2, (i % 8) ^ 1))) % 8 != 2)
+            {
+                continue;
+            }
+
+            // Potential solution, check it.
+            output = new Computer(i,
+                this.computer.RegisterB,
+                this.computer.RegisterC,
+                this.programString
+            ).ExecuteProgram();
+
+            if (output == this.programString)
+            {
+                solution = i;
+                break;
+            }
+        }
+
+        return solution.Value;
     }
 }

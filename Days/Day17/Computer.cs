@@ -4,28 +4,28 @@ namespace AdventOfCode2024.Days.Day17;
 
 public class Computer
 {
-    private int registerA;
-    private int registerB;
-    private int registerC;
+    public long RegisterA;
+    public long RegisterB;
+    public long RegisterC;
 
-    private int[] program;
+    public long[] Program;
 
-    public Computer(int registerA, int registerB, int registerC, string program)
+    public Computer(long registerA, long registerB, long registerC, string program)
     {
-        this.registerA = registerA;
-        this.registerB = registerB;
-        this.registerC = registerC;
-        this.program = program.Split(",").Select(int.Parse).ToArray();
+        this.RegisterA = registerA;
+        this.RegisterB = registerB;
+        this.RegisterC = registerC;
+        this.Program = program.Split(",").Select(long.Parse).ToArray();
     }
 
     public string ExecuteProgram()
     {
-        int instructionPointer = 0;
-        List<int> output = new List<int>();
+        long instructionPointer = 0;
+        List<long> output = new List<long>();
 
         // While looping, we need to guarantee that we've got room
         // for both the op code and the operand.
-        while (instructionPointer <= this.program.Length - 2)
+        while (instructionPointer <= this.Program.Length - 2)
         {
             // We should also guarantee that we're at an even index.
             if (instructionPointer % 2 != 0)
@@ -34,29 +34,29 @@ public class Computer
             }
 
             // Determine the op code and operand.
-            int opCode = this.program[instructionPointer];
-            int operand = this.program[instructionPointer + 1];
+            long opCode = this.Program[instructionPointer];
+            long operand = this.Program[instructionPointer + 1];
 
             // Execute the operation.
-            int? result = this.ExecuteOpCode(opCode, operand);
+            long? result = this.ExecuteOpCode(opCode, operand);
 
-            // If the operation is a print operation, add the result to our collection.
+            // If the operation is a prlong operation, add the result to our collection.
             if (opCode == 5 && result.HasValue)
             {
                 output.Add(result.Value);
             }
 
             // Increment our loop variable.
-            bool shouldIncrementPointer;
+            bool shouldIncrementPolonger;
             if (opCode == 3)
             {
                 // Successful jump operations shouldn't increment the counter.
-                // Instead, move the pointer to the provided value.
+                // Instead, move the polonger to the provided value.
                 instructionPointer = result.HasValue ? result.Value : instructionPointer + 2;
             }
             else
             {
-                // Increment the pointer by two.
+                // Increment the polonger by two.
                 instructionPointer += 2;
             }
         }
@@ -64,7 +64,7 @@ public class Computer
         return output.Join(",");
     }
 
-    private int? ExecuteOpCode(int opcode, int operand)
+    private long? ExecuteOpCode(long opcode, long operand)
     {
         switch (opcode){
             case 0:
@@ -103,7 +103,7 @@ public class Computer
     /// <param name="combo"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    private int GetComboOperand(int combo)
+    private long GetComboOperand(long combo)
     {
         switch (combo)
         {
@@ -113,11 +113,11 @@ public class Computer
             case 3:
                 return combo;
             case 4:
-                return this.registerA;
+                return this.RegisterA;
             case 5:
-                return this.registerB;
+                return this.RegisterB;
             case 6:
-                return this.registerC;
+                return this.RegisterC;
             default:
                 throw new ArgumentException("Only operands 0-6 are valid combo operands.");
         }
@@ -129,12 +129,12 @@ public class Computer
     /// Divides register A by the combo operand and stores the result in register A.
     /// </summary>
     /// <param name="combo"></param>
-    private void adv(int combo)
+    private void adv(long combo)
     {
-        int numerator = this.registerA;
+        long numerator = this.RegisterA;
         double denomenator = Math.Pow(2, this.GetComboOperand(combo));
-        int result = (int)(numerator / denomenator);
-        this.registerA = result;
+        long result = (long)(numerator / denomenator);
+        this.RegisterA = result;
     }
 
     /// <summary>
@@ -142,18 +142,18 @@ public class Computer
     /// and stores the result in register B.
     /// </summary>
     /// <param name="literal"></param>
-    private void bxl(int literal)
+    private void bxl(long literal)
     {
-        this.registerB = this.registerB ^ literal;
+        this.RegisterB = this.RegisterB ^ literal;
     }
 
     /// <summary>
     /// Mods the combo operator's value by 8 and stores the result in register B.
     /// </summary>
     /// <param name="combo"></param>
-    private void bst(int combo)
+    private void bst(long combo)
     {
-        this.registerB = this.GetComboOperand(combo) % 8;
+        this.RegisterB = this.GetComboOperand(combo) % 8;
     }
 
     /// <summary>
@@ -161,10 +161,10 @@ public class Computer
     /// If a jump occurs, returns the value of the new index.
     /// If not, returns null.
     /// </summary>
-    private int? jnz(int literal)
+    private long? jnz(long literal)
     {
         // Do nothing if register A has a zero-value.
-        return this.registerA == 0
+        return this.RegisterA == 0
             ? null
             : literal;
     }
@@ -173,9 +173,9 @@ public class Computer
     /// Performs a bitwise XOR on registers B and C, then stores the result in register B.
     /// </summary>
     /// <param name="operand"></param>
-    private void bxc(int operand)
+    private void bxc(long operand)
     {
-        this.registerB = this.registerB ^ this.registerC;
+        this.RegisterB = this.RegisterB ^ this.RegisterC;
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ public class Computer
     /// </summary>
     /// <param name="combo"></param>
     /// <returns></returns>
-    private int outOp(int combo)
+    private long outOp(long combo)
     {
         return this.GetComboOperand(combo) % 8;
     }
@@ -192,24 +192,24 @@ public class Computer
     /// Divides register A by the combo operand and stores the result in register B.
     /// </summary>
     /// <param name="combo"></param>
-    private void bdv(int combo)
+    private void bdv(long combo)
     {
-        int numerator = this.registerA;
+        long numerator = this.RegisterA;
         double denomenator = Math.Pow(2, this.GetComboOperand(combo));
-        int result = (int)(numerator / denomenator);
-        this.registerB = result;
+        long result = (long)(numerator / denomenator);
+        this.RegisterB = result;
     }
 
     /// <summary>
     /// Divides register A by the combo operand and stores the result in register C.
     /// </summary>
     /// <param name="combo"></param>
-    private void cdv(int combo)
+    private void cdv(long combo)
     {
-        int numerator = this.registerA;
+        long numerator = this.RegisterA;
         double denomenator = Math.Pow(2, this.GetComboOperand(combo));
-        int result = (int)(numerator / denomenator);
-        this.registerC = result;
+        long result = (long)(numerator / denomenator);
+        this.RegisterC = result;
     }
 
     #endregion
