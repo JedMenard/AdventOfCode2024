@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day18;
+﻿using AdventOfCode2024.Days.Day19;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().FindFirstBlockingWall().ToString() ?? "No valid path.";
+        string result = new InputParser().CountPossiblePatterns().ToString() ?? "No valid path.";
 
         sw.Stop();
 
