@@ -31,8 +31,8 @@ public class InputParser
         }
     }
 
-    public int CountPossiblePatterns()
+    public int SumSolutionCounts()
     {
-        return this.patterns.Count(this.onsen.PatternIsPossible);
+        return this.patterns.Sum(pattern => this.onsen.GetAllSolutions(pattern).Count);
     }
 }

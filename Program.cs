@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().CountPossiblePatterns().ToString() ?? "No valid path.";
+        string result = new InputParser().SumSolutionCounts().ToString() ?? "No valid path.";
 
         sw.Stop();
 
