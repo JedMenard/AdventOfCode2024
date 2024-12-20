@@ -14,4 +14,10 @@ public class Cheat
         this.EndPoint = endPoint;
         this.StepsSaved = stepsSaved;
     }
+
+    // Comparator override for dictionary hashing.
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(this.StartPoint, this.EndPoint);
+    }
 }

@@ -9,9 +9,11 @@ public class Race
     private List<Point> path;
     private Point startPoint;
     private Point endPoint;
+    private int maxCheatSteps;
 
-    public Race(StreamReader input)
+    public Race(StreamReader input, int maxCheatSteps = 20)
     {
+        this.maxCheatSteps = maxCheatSteps;
         this.course = Grid<char>.FromStreamReader(input);
 
         this.startPoint = this.course.First(kvp => kvp.Value == 'S').Key;
@@ -20,9 +22,11 @@ public class Race
         this.dijkstraMap = this.course.BuildSinglePathDijkstraMap(this.startPoint, out this.path);
     }
 
-    public List<Cheat> FindAllCheats()
+    public HashSet<Cheat> FindAllCheats()
     {
-        List<Cheat> cheats = new List<Cheat>();
+        HashSet<Cheat> cheats = new HashSet<Cheat>();
+        int maxX = this.course.MaxBy(kvp => kvp.Key.X).Key.X - 1;
+        int maxY = this.course.MaxBy(kvp => kvp.Key.Y).Key.Y - 1;
 
         // Iterate over each point along the path, look for potential cheats, and add them to the collection.
         foreach (Point point in this.path)
@@ -34,26 +38,33 @@ public class Race
                 throw new Exception("Point along path has no distance on dijkstra map");
             }
 
-            // Look for cheats in each direction.
-            foreach (DirectionEnum direction in DirectionEnumExtensions.CardinalDirections)
+            // Look for cheats.
+            // Loop over all reachable points within cheat range and check if they're within range.
+            int yStart = Math.Max(-this.maxCheatSteps, 1 - point.Y);
+            int yEnd = Math.Min(this.maxCheatSteps, maxY - point.Y);
+            for (int ySteps = yStart; ySteps <= yEnd; ySteps++)
             {
-                // For this to be a valid cheat, there has to be a wall in this direction.
-                // Additionally, there has to be an open space on the other side of the wall.
-                Point wallPoint = point.GetNextPointInDirection(direction, 1);
-                Point cheatPoint = point.GetNextPointInDirection(direction, 2);
+                // Calculate our x-bounds.
+                int remainingSteps = this.maxCheatSteps - Math.Abs(ySteps);
+                int xStart = Math.Max(-remainingSteps, 1 - point.X);
+                int xEnd = Math.Min(remainingSteps, maxX - point.X);
 
-                if (this.course.PointIsValid(cheatPoint) && this.course[wallPoint] == '#' && this.course[cheatPoint] != '#')
+                for (int xSteps = xStart; xSteps <= xEnd; xSteps++)
                 {
-                    // There is a potential cheat here.
-                    // Verify that it will move us forward along the path.
-                    int? distanceToCheatPoint = this.dijkstraMap[cheatPoint];
+                    // Determine our new point.
+                    Point cheatPoint = new Point(point.X + xSteps, point.Y + ySteps);
 
+                    // Check if the point is an open space.
+                    int? distanceToCheatPoint = this.dijkstraMap[cheatPoint];
                     if (!distanceToCheatPoint.HasValue)
                     {
-                        throw new Exception("Cheat point has no distance on dijkstra map");
+                        // This point must be a wall. Skip it.
+                        continue;
                     }
 
-                    int stepsSaved = distanceToCheatPoint.Value - (distanceToPoint.Value + 2);
+                    // Check if the point is further along the path than we are.
+                    int cheatSteps = Math.Abs(ySteps) + Math.Abs(xSteps);
+                    int stepsSaved = distanceToCheatPoint.Value - (distanceToPoint.Value + cheatSteps);
                     if (stepsSaved > 0)
                     {
                         // This cheat will save us time. Add it to the collection.

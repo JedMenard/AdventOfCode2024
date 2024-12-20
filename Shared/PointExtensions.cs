@@ -59,4 +59,15 @@ public static class PointExtensions
             return DirectionEnum.South;
         }
     }
+
+    /// <summary>
+    /// Calculates the number of steps required to reach the given point.
+    /// </summary>
+    /// <param name="first"></param>
+    /// <param name="second"></param>
+    /// <returns></returns>
+    public static int DistanceToPoint(this Point first, Point second)
+    {
+        return Math.Abs(first.X - second.X) + Math.Abs(first.Y - second.Y);
+    }
 }
