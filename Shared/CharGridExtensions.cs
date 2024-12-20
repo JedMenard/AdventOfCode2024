@@ -63,6 +63,50 @@ public static class CharGridExtensions
     }
 
     /// <summary>
+    /// Builds a dijkstra map under the assumption that the input grid only has a single path to the end,
+    /// and that all non-wall points on the grid are used in the path.
+    /// </summary>
+    /// <param name="grid"></param>
+    /// <param name="startPoint"></param>
+    /// <returns></returns>
+    public static Grid<int?> BuildSinglePathDijkstraMap(this Grid<char> grid, Point startPoint, out List<Point> path)
+    {
+        // Build an empty dijkstra map.
+        int maxX = grid.MaxBy(kvp => kvp.Key.X).Key.X;
+        int maxY = grid.MaxBy(kvp => kvp.Key.Y).Key.Y;
+        Grid<int?> dijkstraMap = new Grid<int?>(maxX, maxY, null);
+
+        // We already know the starting point.
+        // Find which point next to the start is open.
+        Point previousPoint = new Point(startPoint);
+        Point currentPoint = startPoint.GetAdjacentPoints().First(point => grid.PointIsValid(point) && grid[point] == '.');
+        path = new List<Point> { startPoint, currentPoint };
+
+        // Set the starting values.
+        dijkstraMap[startPoint] = 0;
+        dijkstraMap[currentPoint] = 1;
+        int steps = 2;
+
+        // Now loop until we're at the end.
+        while (grid.PointIsValid(currentPoint) && grid[currentPoint] != 'E')
+        {
+            // Find the next point.
+            Point nextPoint = currentPoint.GetAdjacentPoints()
+                .First(point => point != previousPoint && grid.PointIsValid(point) && grid[point] != '#');
+
+            // Add the next point to the path and the map.
+            path.Add(nextPoint);
+            dijkstraMap[nextPoint] = steps++;
+
+            // Update the current and previous points.
+            previousPoint = currentPoint;
+            currentPoint = nextPoint;
+        }
+
+        return dijkstraMap;
+    }
+
+    /// <summary>
     /// Determines a single shortest path from the start to the end.
     /// </summary>
     /// <param name="dijkstraMap"></param>

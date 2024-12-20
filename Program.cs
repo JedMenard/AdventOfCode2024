@@ -1,4 +1,4 @@
-﻿using AdventOfCode2024.Days.Day19;
+﻿using AdventOfCode2024.Days.Day20;
 using System.Diagnostics;
 
 internal class Program
@@ -8,7 +8,7 @@ internal class Program
         Stopwatch sw = new Stopwatch();
         sw.Start();
 
-        string result = new InputParser().SumSolutionCounts().ToString() ?? "No valid path.";
+        string result = new InputParser().CountCheatsOfSize(100).ToString() ?? "No valid path.";
 
         sw.Stop();
 
